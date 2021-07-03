@@ -1,9 +1,10 @@
 # Person API 
 
-## API Rest built with Spring Boot for registries of persons, possibly users
+## API Rest built with Spring Boot for beer stock management
 
-The API contains all the typical REST API services. The API isn't specific to any given database. This project uses the 
-H2 in memory database.
+The API contains the GET (all or by ID), POST, PUT, DELETE (by ID) and PATCH (increment and decrement of beer stock quantity). The API isn't specific to any given database.
+
+This project uses the H2 in memory database, the aforementioned Spring Boot, Spring WEB (MVC), Spring Data JPA (Spring Data and Hibernate), bean validation with Hibernate validator, Spring Actuator, Spring DevTools for better development experience (fast application restarts), Lombok and MapStruct to reduce boilerplate code, Spring default test suite (JUnit, Mockito and Hamcrest) and OpenAPI Swagger 3 for simple project documentation.
 
 ### Versions
 
@@ -13,7 +14,7 @@ H2 in memory database.
 - H2 1.4.2;
 - Mapstruct 1.4.2;
 - Lombok 1.18.20 --- lombok-mapstruct-binding on 0.2.0;
-- OpenAPI UI (Swagger) 1.5.9.
+- OpenAPI UI (Swagger 3) 1.5.9.
 
 ### Getting started
 
@@ -28,6 +29,6 @@ With swagger-ui you will be able to consult and test the functionalities provide
 
 Look below for a preview of Swagger.
 
-![personapi](https://user-images.githubusercontent.com/64466694/123513082-81a24800-d661-11eb-9349-fb76f45a7afd.png)
+![API image placeholder](https://github.com/Yofiel/beer-stock)
 
 For practicality, a JSON file with the API definitions is in the repository. Search for `api-docs.json`.
