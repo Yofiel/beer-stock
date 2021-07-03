@@ -1,0 +1,380 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Beer Stock",
+        "description": "Manages beer stock",
+        "license": {
+            "name": "GPLv3",
+            "url": "https://www.gnu.org/licenses/gpl-3.0.txt"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "Generated server url"
+        }
+    ],
+    "paths": {
+        "/api/v1/beers/{id}": {
+            "put": {
+                "tags": [
+                    "beer-controller"
+                ],
+                "description": "Beer full update/replace operation",
+                "operationId": "fullUpdate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BeerDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "Missing required fields or wrong field range value"
+                    },
+                    "404": {
+                        "description": "Beer with given id not found"
+                    },
+                    "200": {
+                        "description": "Beer successfully saved"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "beer-controller"
+                ],
+                "description": "Delete a beer found by a given valid Id",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Beer with given id not found"
+                    },
+                    "204": {
+                        "description": "Success beer deleted in the system"
+                    }
+                }
+            }
+        },
+        "/api/v1/beers": {
+            "get": {
+                "tags": [
+                    "beer-controller"
+                ],
+                "description": "Returns a list of all beers registered in the system",
+                "operationId": "findAll",
+                "responses": {
+                    "200": {
+                        "description": "List of all beers registered in the system",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/BeerDto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "beer-controller"
+                ],
+                "description": "Beer creation operation",
+                "operationId": "save",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BeerDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "Missing required fields or wrong field range value",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Beer successfully saved",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/beers/{id}/increment": {
+            "patch": {
+                "tags": [
+                    "beer-controller"
+                ],
+                "description": "Beer quantity increment operation",
+                "operationId": "increment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/QuantityDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "Missing required fields or wrong field range value",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Beer successfully saved",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Quantity max limit exceeded because of the increment",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/beers/{id}/decrement": {
+            "patch": {
+                "tags": [
+                    "beer-controller"
+                ],
+                "description": "Beer quantity decrement operation",
+                "operationId": "decrement",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/QuantityDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "400": {
+                        "description": "Missing required fields or wrong field range value",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Beer successfully saved",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Negative quantity reached because of the decrement",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/beers/{name}": {
+            "get": {
+                "tags": [
+                    "beer-controller"
+                ],
+                "description": "Returns beer found by a given name",
+                "operationId": "findByName",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success beer found in the system",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Beer with given name not found",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BeerDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BeerDto": {
+                "required": [
+                    "brand",
+                    "max",
+                    "name",
+                    "quantity",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "name": {
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "brand": {
+                        "maxLength": 150,
+                        "minLength": 1,
+                        "type": "string"
+                    },
+                    "max": {
+                        "maximum": 500,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "quantity": {
+                        "maximum": 100,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "LAGER",
+                            "MALZBIER",
+                            "WITBIER",
+                            "WEISS",
+                            "ALE",
+                            "IPA",
+                            "STOUT"
+                        ]
+                    }
+                }
+            },
+            "QuantityDto": {
+                "required": [
+                    "quantity"
+                ],
+                "type": "object",
+                "properties": {
+                    "quantity": {
+                        "maximum": 100,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            }
+        }
+    }
+}
