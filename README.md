@@ -4,7 +4,7 @@
 
 The API contains the GET (all or by ID), POST, PUT, DELETE (by ID) and PATCH (increment and decrement of beer stock quantity). The API isn't specific to any given database.
 
-This project uses the H2 in memory database, the aforementioned Spring Boot, Spring WEB (MVC), Spring Data JPA (Spring Data and Hibernate), bean validation with Hibernate validator, Spring Actuator, Spring DevTools for better development experience (fast application restarts), Lombok and MapStruct to reduce boilerplate code, Spring default test suite (JUnit, Mockito and Hamcrest) and OpenAPI Swagger 3 for simple project documentation.
+This Maven project uses the H2 in memory database, the aforementioned Spring Boot, Spring WEB (MVC), Spring Data JPA (Spring Data and Hibernate), bean validation with Hibernate validator, Spring Actuator, Spring DevTools for better development experience (fast application restarts), Lombok and MapStruct to reduce boilerplate code, Spring default test suite (JUnit, Mockito and Hamcrest) and OpenAPI Swagger 3 for simple project documentation.
 
 ### Versions
 
