@@ -1,0 +1,4 @@
+application:
+  name: Beer Stock
+  description: Manages beer stock
+  version: 1.0.0
