@@ -1,4 +1,4 @@
-# Person API 
+# Beer Stock API
 
 ## API Rest built with Spring Boot for beer stock management
 
