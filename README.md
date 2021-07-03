@@ -29,6 +29,6 @@ With swagger-ui you will be able to consult and test the functionalities provide
 
 Look below for a preview of Swagger.
 
-![API image placeholder](https://github.com/Yofiel/beer-stock)
+![API image](https://user-images.githubusercontent.com/64466694/124362096-5abbb700-dc09-11eb-81e3-04819c9d92e9.png)
 
 For practicality, a JSON file with the API definitions is in the repository. Search for `api-docs.json`.
