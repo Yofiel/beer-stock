@@ -2,6 +2,9 @@ package com.pedrogobira.beerstock.controller;
 
 import com.pedrogobira.beerstock.builder.BeerDtoBuilder;
 import com.pedrogobira.beerstock.dto.BeerDto;
+import com.pedrogobira.beerstock.dto.QuantityDto;
+import com.pedrogobira.beerstock.exception.BeerStockExceededException;
+import com.pedrogobira.beerstock.exception.NegativeStockException;
 import com.pedrogobira.beerstock.exception.NotFoundException;
 import com.pedrogobira.beerstock.service.BeerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -166,4 +170,81 @@ public class BeerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void whenPATCHIsCalledToIncrementAndQuantityIsValidThenOkStatusIsReturned() throws Exception {
+        // Given
+        BeerDto beerDto = BeerDtoBuilder.builder().build().toBeerDto();
+        QuantityDto quantityDto = new QuantityDto(10);
+        beerDto.setQuantity(beerDto.getQuantity() + quantityDto.getQuantity());
+
+        // When
+        when(service.increment(VALID_BEER_ID, quantityDto)).thenReturn(beerDto);
+
+        // Then
+        mockMvc.perform(patch(BEER_API_URL_PATH + "/" + VALID_BEER_ID + BEER_API_SUBPATH_INCREMENT_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(quantityDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(beerDto.getName())))
+                .andExpect(jsonPath("$.brand", is(beerDto.getBrand())))
+                .andExpect(jsonPath("$.type", is(beerDto.getType().toString())))
+                .andExpect(jsonPath("$.quantity", is(beerDto.getQuantity())));
+    }
+
+    @Test
+    void whenPATCHIsCalledToIncrementAndQuantityIsInvalidThenUnprocessableEntityStatusIsReturned() throws Exception {
+        // Given
+        BeerDto beerDto = BeerDtoBuilder.builder().build().toBeerDto();
+        QuantityDto quantityDto = new QuantityDto(100);
+        beerDto.setQuantity(beerDto.getQuantity() + quantityDto.getQuantity());
+
+        // When
+        when(service.increment(VALID_BEER_ID, quantityDto)).thenThrow(BeerStockExceededException.class);
+
+        // Then
+        mockMvc.perform(patch(BEER_API_URL_PATH + "/" + VALID_BEER_ID + BEER_API_SUBPATH_INCREMENT_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(quantityDto)))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void whenPATCHIsCalledToDecrementAndQuantityIsValidThenOkStatusIsReturned() throws Exception {
+        // Given
+        BeerDto beerDto = BeerDtoBuilder.builder().build().toBeerDto();
+        QuantityDto quantityDto = new QuantityDto(10);
+        beerDto.setQuantity(beerDto.getQuantity() - quantityDto.getQuantity());
+
+        // When
+        when(service.decrement(VALID_BEER_ID, quantityDto)).thenReturn(beerDto);
+
+        // Then
+        mockMvc.perform(patch(BEER_API_URL_PATH + "/" + VALID_BEER_ID + BEER_API_SUBPATH_DECREMENT_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(quantityDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(beerDto.getName())))
+                .andExpect(jsonPath("$.brand", is(beerDto.getBrand())))
+                .andExpect(jsonPath("$.type", is(beerDto.getType().toString())))
+                .andExpect(jsonPath("$.quantity", is(beerDto.getQuantity())));
+    }
+
+    @Test
+    void whenPATCHIsCalledToDecrementAndQuantityIsInvalidThenUnprocessableEntityStatusIsReturned() throws Exception {
+        // Given
+        BeerDto beerDto = BeerDtoBuilder.builder().build().toBeerDto();
+        QuantityDto quantityDto = new QuantityDto(50);
+        beerDto.setQuantity(beerDto.getQuantity() - quantityDto.getQuantity());
+
+        // When
+        when(service.decrement(VALID_BEER_ID, quantityDto)).thenThrow(NegativeStockException.class);
+
+        // Then
+        mockMvc.perform(patch(BEER_API_URL_PATH + "/" + VALID_BEER_ID + BEER_API_SUBPATH_DECREMENT_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(quantityDto)))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
 }

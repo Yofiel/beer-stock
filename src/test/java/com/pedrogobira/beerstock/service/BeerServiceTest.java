@@ -2,8 +2,11 @@ package com.pedrogobira.beerstock.service;
 
 import com.pedrogobira.beerstock.builder.BeerDtoBuilder;
 import com.pedrogobira.beerstock.dto.BeerDto;
+import com.pedrogobira.beerstock.dto.QuantityDto;
 import com.pedrogobira.beerstock.entity.Beer;
 import com.pedrogobira.beerstock.exception.BeerAlreadyExistsException;
+import com.pedrogobira.beerstock.exception.BeerStockExceededException;
+import com.pedrogobira.beerstock.exception.NegativeStockException;
 import com.pedrogobira.beerstock.exception.NotFoundException;
 import com.pedrogobira.beerstock.mapper.BeerMapper;
 import com.pedrogobira.beerstock.repository.BeerRepository;
@@ -25,8 +28,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BeerServiceTest {
-
-    private static final long INVALID_BEER_ID = 1L;
 
     @Mock
     private BeerRepository repository;
@@ -144,5 +145,70 @@ public class BeerServiceTest {
         assertThrows(NotFoundException.class, () -> service.delete(dto.getId()));
     }
 
+    @Test
+    void whenIncrementIsCalledAndAValidQuantityIsGivenThenIncrementBeerStock() {
+        // Given
+        BeerDto beerDto = BeerDtoBuilder.builder().build().toBeerDto();
+        Beer expectedBeer = mapper.toEntity(beerDto);
+        QuantityDto quantityDto = new QuantityDto(10);
+        int expectedQuantity = expectedBeer.getQuantity() + quantityDto.getQuantity();
+
+        // When
+        when(repository.findById(beerDto.getId())).thenReturn(Optional.of(expectedBeer));
+        when(repository.save(expectedBeer)).thenReturn(expectedBeer);
+
+        // Then
+        service.increment(beerDto.getId(), quantityDto);
+
+        assertThat(expectedQuantity, equalTo(expectedBeer.getQuantity()));
+        assertThat(expectedQuantity, lessThan(beerDto.getMax()));
+    }
+
+    @Test
+    void whenIncrementIsCalledAndAnInvalidQuantityIsGivenThenAnExceptionShouldBeThrown() {
+        // Given
+        BeerDto dto = BeerDtoBuilder.builder().build().toBeerDto();
+        Beer expectedBeer = mapper.toEntity(dto);
+        QuantityDto quantityDto = new QuantityDto(50);
+
+        // When
+        when(repository.findById(dto.getId())).thenReturn(Optional.of(expectedBeer));
+
+        // Then
+        assertThrows(BeerStockExceededException.class, () -> service.increment(dto.getId(), quantityDto));
+    }
+
+    @Test
+    void whenDecrementIsCalledAndAValidQuantityIsGivenThenDecrementBeerStock() {
+        // Given
+        BeerDto beerDto = BeerDtoBuilder.builder().build().toBeerDto();
+        Beer expectedBeer = mapper.toEntity(beerDto);
+        QuantityDto quantityDto = new QuantityDto(10);
+        int expectedQuantity = beerDto.getQuantity() - quantityDto.getQuantity();
+
+        // When
+        when(repository.findById(beerDto.getId())).thenReturn(Optional.of(expectedBeer));
+        when(repository.save(expectedBeer)).thenReturn(expectedBeer);
+
+        // Then
+        service.decrement(beerDto.getId(), quantityDto);
+
+        assertThat(expectedQuantity, equalTo(expectedBeer.getQuantity()));
+        assertThat(expectedQuantity, greaterThanOrEqualTo(0));
+    }
+
+    @Test
+    void whenDecrementIsCalledAndAnInvalidQuantityIsGivenThenAnExceptionShouldBeThrown() {
+        // Given
+        BeerDto beerDto = BeerDtoBuilder.builder().build().toBeerDto();
+        Beer expectedBeer = mapper.toEntity(beerDto);
+        QuantityDto quantityDto = new QuantityDto(80);
+
+        // When
+        when(repository.findById(beerDto.getId())).thenReturn(Optional.of(expectedBeer));
+
+        // Then
+        assertThrows(NegativeStockException.class, () -> service.decrement(beerDto.getId(), quantityDto));
+    }
 
 }
