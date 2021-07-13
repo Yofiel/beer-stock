@@ -2,9 +2,11 @@
 
 ## API Rest built with Spring Boot for beer stock management
 
-The API contains the GET (all or by ID), POST, PUT, DELETE (by ID) and PATCH (increment and decrement of beer stock quantity). The API isn't specific to any given database.
+The API contains the **GET** (all or by ID), **POST**, **PUT**, **DELETE** (by ID) and **PATCH** (increment and decrement of beer stock quantity). The API isn't specific to any given database.
 
-This Maven project uses the H2 in memory database, the aforementioned Spring Boot, Spring WEB (MVC), Spring Data JPA (Spring Data and Hibernate), bean validation with Hibernate validator, Spring Actuator, Spring DevTools for better development experience (fast application restarts), Lombok and MapStruct to reduce boilerplate code, Spring default test suite (JUnit, Mockito and Hamcrest) and OpenAPI Swagger 3 for simple project documentation.
+This Maven project **uses** the **H2** in memory database, the aforementioned **Spring Boot**, **Spring WEB** (MVC), **Spring Data JPA** (Spring Data and Hibernate), bean validation with **Hibernate validator**, **Spring Actuator**, **Spring DevTools** for better development experience (fast application restarts), **Lombok** and **MapStruct** to reduce boilerplate code, Spring default test suite (**JUnit, Mockito and Hamcrest**) and **OpenAPI Swagger 3** for simple project documentation.
+
+The controller and service layer were covered with unit testing, ensuring the API works regardless of the implementation of new features and refactoring of existing features. To understand what each feature does, see these tests, because they explain for themselves what the project does in its current state.
 
 ### Versions
 
